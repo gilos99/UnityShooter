@@ -21,10 +21,12 @@ public class akScript : MonoBehaviour {
 	public Text textMagazynek;
 	public GameObject flara;
 	public Camera mCamera;
+	public enemyScript wrog;
 	void Start () {
 		me = GetComponent<Transform> ();
 		magazynek = 3 * maxAmunicja;
 		amunicja = maxAmunicja;
+		wrog = FindObjectOfType<enemyScript> ();
 	}
 	
 	// Update is called once per frame
@@ -65,7 +67,7 @@ public class akScript : MonoBehaviour {
 		}
 		else if ((up||left||right)&&sprint) {
 			maxMachanie = 0.07f;
-			machanieAmount = 0.01f;
+			machanieAmount = 0.012f;
 		}
 		else if (down) {
 			maxMachanie = 0.03f;
@@ -74,7 +76,7 @@ public class akScript : MonoBehaviour {
 		else if (!down&&!up&&!left&&!right) {
 			maxMachanie = 0f;
 		}
-		if (shotUp) {
+		if (shotUp&&amunicja>0) {
 			
 			Shoot ();
 		}
@@ -87,15 +89,33 @@ public class akScript : MonoBehaviour {
 
 	}
 	void Shoot(){
-		if (amunicja>0) {
+		
 			machanie = 0.09f;
 			amunicja--;
-		}
+
 		flara.SetActive (true);
 
 		RaycastHit hit;
 		if (Physics.Raycast(mCamera.transform.position,mCamera.transform.forward,out hit)) {
 			Debug.Log (hit.transform.gameObject.tag);
+			if (hit.transform.gameObject.tag=="HeadHitBox") {
+				if (wrog.hp>80) {
+					wrog.DamageTaken (80);
+				}
+				else if (wrog.hp<=80) {
+					Destroy (hit.transform.parent.gameObject);
+					wrog.hp = 100f;
+				}
+			}
+			if (hit.transform.gameObject.tag=="BodyHitBox") {
+				if (wrog.hp>20) {
+					wrog.DamageTaken (20);
+				}
+				else if (wrog.hp<=20) {
+					Destroy (hit.transform.parent.gameObject);
+					wrog.hp = 100f;
+				}
+			}
 		}
 	}
 	void Reload(int _ammo,int _magazynek){

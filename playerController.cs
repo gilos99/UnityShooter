@@ -12,6 +12,7 @@ public class playerController : MonoBehaviour {
 	public float czuloscMyszki;
 	float myszkaGoraDol;
 	float myszkaPrawoLewo;
+	public float maxGoraDol;
 	 float przodTyl;
 	 float lewoPrawo;
 	public float predkoscBiegania = 7f;
@@ -42,9 +43,17 @@ public class playerController : MonoBehaviour {
 		if (Input.GetKey(KeyCode.S)) 
 			{
 			predkoscBiegania=0;
+			if (!Input.GetKey(KeyCode.LeftShift)) {
+				speed = 5f;
+
+			}
 		}
 		else if (!Input.GetKey(KeyCode.S)) {
 				predkoscBiegania=7f;
+			if (!Input.GetKey(KeyCode.LeftShift)) {
+				speed = 9f;
+
+			}
 			}
 
 		if(Input.GetKeyDown("left shift")) {
@@ -62,7 +71,7 @@ public class playerController : MonoBehaviour {
 		myszkaPrawoLewo = Input.GetAxis ("Mouse X") * czuloscMyszki;
 		transform.Rotate (0,myszkaPrawoLewo,0);
 		myszkaGoraDol -= Input.GetAxis ("Mouse Y")*czuloscMyszki;
-		myszkaGoraDol = Mathf.Clamp (myszkaGoraDol,-90f,90f);
+		myszkaGoraDol = Mathf.Clamp (myszkaGoraDol,-maxGoraDol,maxGoraDol);
 		MainCamera.transform.localRotation = Quaternion.Euler (myszkaGoraDol,0,0);
 	}
 }
