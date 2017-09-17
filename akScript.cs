@@ -1,18 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class akScript : MonoBehaviour {
 
 	Transform me;
+	public Transform gracz;
+
 	public Transform celownik;
 	public Transform positionAk;
 	public float machanie;
 	public bool machanieBool=true;
 	public float maxMachanie;
 	public float machanieAmount=0.02f;
+	public int amunicja;
+	public int magazynek;
+	public int maxAmunicja=30;
+	public Text textAmunicja;
+	public Text textMagazynek;
+	public GameObject flara;
+	public Camera mCamera;
 	void Start () {
 		me = GetComponent<Transform> ();
+		magazynek = 3 * maxAmunicja;
+		amunicja = maxAmunicja;
 	}
 	
 	// Update is called once per frame
@@ -20,7 +32,8 @@ public class akScript : MonoBehaviour {
 		poruszanie ();
 		me.position = new Vector3 (positionAk.position.x,positionAk.position.y+machanie,positionAk.position.z);
 		me.LookAt (new Vector3(celownik.position.x,celownik.position.y+machanie,celownik.position.z));
-
+		textAmunicja.text = amunicja.ToString();
+		textMagazynek.text = magazynek.ToString ();
 	}
 	void poruszanie()
 	{
@@ -30,6 +43,7 @@ public class akScript : MonoBehaviour {
 		var right = Input.GetKey (KeyCode.D);
 		var shotUp = Input.GetMouseButtonUp (0);
 		var sprint = Input.GetKey (KeyCode.LeftShift);
+		var przeladowanie = Input.GetKeyUp (KeyCode.R);
 		if (machanie>maxMachanie) {
 			machanieBool = false;
 		}
@@ -61,9 +75,39 @@ public class akScript : MonoBehaviour {
 			maxMachanie = 0f;
 		}
 		if (shotUp) {
-			machanie = 0.09f;
-
+			
+			Shoot ();
+		}
+		if (przeladowanie) {
+			Reload (amunicja,magazynek);
+		}
+		if ((!shotUp)|| (amunicja<=0)) {
+			flara.SetActive (false);
 		}
 
+	}
+	void Shoot(){
+		if (amunicja>0) {
+			machanie = 0.09f;
+			amunicja--;
+		}
+		flara.SetActive (true);
+
+		RaycastHit hit;
+		if (Physics.Raycast(mCamera.transform.position,mCamera.transform.forward,out hit)) {
+			Debug.Log (hit.transform.gameObject.tag);
+		}
+	}
+	void Reload(int _ammo,int _magazynek){
+		var dodatkoweAmmo = maxAmunicja - _ammo;
+
+		if (dodatkoweAmmo<=_magazynek) {
+			amunicja += dodatkoweAmmo;
+			magazynek -= dodatkoweAmmo;
+		}
+		else if (dodatkoweAmmo>magazynek) {
+			amunicja += _magazynek;
+			magazynek -= _magazynek;
+		}
 	}
 }
