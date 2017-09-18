@@ -7,7 +7,7 @@ public class akScript : MonoBehaviour {
 
 	Transform me;
 	public Transform gracz;
-
+	public playerController graczC;
 	public Transform celownik;
 	public Transform positionAk;
 	public float machanie;
@@ -22,11 +22,13 @@ public class akScript : MonoBehaviour {
 	public GameObject flara;
 	public Camera mCamera;
 	public enemyScript wrog;
+
 	void Start () {
 		me = GetComponent<Transform> ();
 		magazynek = 3 * maxAmunicja;
 		amunicja = maxAmunicja;
 		wrog = FindObjectOfType<enemyScript> ();
+		graczC = FindObjectOfType<playerController> ();
 	}
 	
 	// Update is called once per frame

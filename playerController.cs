@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour {
 	public Camera MainCamera;
+	public Transform cameraCelownik;
+
 	public Transform me;
 	public CharacterController playerCC;
 	public float aktualnaWysokosc=0f;
@@ -26,6 +28,8 @@ public class playerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
+
 		mouse ();
 		keyboard ();
 	}
