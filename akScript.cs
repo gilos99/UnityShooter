@@ -22,7 +22,8 @@ public class akScript : MonoBehaviour {
 	public GameObject flara;
 	public Camera mCamera;
 	public enemyScript wrog;
-
+	public float amountOdrzut;
+	public float coIle;
 	void Start () {
 		me = GetComponent<Transform> ();
 		magazynek = 3 * maxAmunicja;
@@ -33,6 +34,9 @@ public class akScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (coIle>0) {
+			coIle -= 1f;
+		}
 		poruszanie ();
 		me.position = new Vector3 (positionAk.position.x,positionAk.position.y+machanie,positionAk.position.z);
 		me.LookAt (new Vector3(celownik.position.x,celownik.position.y+machanie,celownik.position.z));
@@ -46,6 +50,7 @@ public class akScript : MonoBehaviour {
 		var left = Input.GetKey (KeyCode.A);
 		var right = Input.GetKey (KeyCode.D);
 		var shotUp = Input.GetMouseButtonUp (0);
+		var shot = Input.GetMouseButton (0);
 		var sprint = Input.GetKey (KeyCode.LeftShift);
 		var przeladowanie = Input.GetKeyUp (KeyCode.R);
 		if (machanie>maxMachanie) {
@@ -66,45 +71,55 @@ public class akScript : MonoBehaviour {
 		if ((up||left||right)&&!sprint) {
 			maxMachanie = 0.05f;
 			machanieAmount = 0.007f;
+			amountOdrzut = 1.5f;
 		}
 		else if ((up||left||right)&&sprint) {
 			maxMachanie = 0.07f;
 			machanieAmount = 0.012f;
+			amountOdrzut = 2f;
 		}
 		else if (down) {
 			maxMachanie = 0.03f;
 			machanieAmount = 0.003f;
+			amountOdrzut = 1f;
 		}
 		else if (!down&&!up&&!left&&!right) {
 			maxMachanie = 0f;
+			amountOdrzut = 0.7f;
 		}
-		if (shotUp&&amunicja>0) {
+		if (shotUp&&amunicja>0&&coIle==0) {
 			
+			Shoot ();
+		}
+		if (shot&&amunicja>0&&coIle==0) {
+
 			Shoot ();
 		}
 		if (przeladowanie) {
 			Reload (amunicja,magazynek);
 		}
-		if ((!shotUp)|| (amunicja<=0)) {
+		if ((!shotUp&&!shot)|| (amunicja<=0)) {
 			flara.SetActive (false);
 		}
 
 	}
 	void Shoot(){
-		
-			machanie = 0.09f;
+		graczC.odrzutY = amountOdrzut;
+
 			amunicja--;
+	
+		machanie = 0.09f;	
 
 		flara.SetActive (true);
-
+		coIle = 7f;
 		RaycastHit hit;
 		if (Physics.Raycast(mCamera.transform.position,mCamera.transform.forward,out hit)) {
 			Debug.Log (hit.transform.gameObject.tag);
 			if (hit.transform.gameObject.tag=="HeadHitBox") {
-				if (wrog.hp>80) {
-					wrog.DamageTaken (80);
+				if (wrog.hp>60) {
+					wrog.DamageTaken (60);
 				}
-				else if (wrog.hp<=80) {
+				else if (wrog.hp<=60) {
 					Destroy (hit.transform.parent.gameObject);
 					wrog.hp = 100f;
 				}

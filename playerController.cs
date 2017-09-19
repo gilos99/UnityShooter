@@ -5,7 +5,7 @@ using UnityEngine;
 public class playerController : MonoBehaviour {
 	public Camera MainCamera;
 	public Transform cameraCelownik;
-
+	public float odrzutY;
 	public Transform me;
 	public CharacterController playerCC;
 	public float aktualnaWysokosc=0f;
@@ -28,7 +28,12 @@ public class playerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (odrzutY>0) {
+			odrzutY -= 0.1f;
+		}
+		else if (odrzutY<=0) {
+			odrzutY = 0f;
+		}
 
 		mouse ();
 		keyboard ();
@@ -74,7 +79,7 @@ public class playerController : MonoBehaviour {
 	{
 		myszkaPrawoLewo = Input.GetAxis ("Mouse X") * czuloscMyszki;
 		transform.Rotate (0,myszkaPrawoLewo,0);
-		myszkaGoraDol -= Input.GetAxis ("Mouse Y")*czuloscMyszki;
+		myszkaGoraDol -= Input.GetAxis ("Mouse Y")*czuloscMyszki+odrzutY;
 		myszkaGoraDol = Mathf.Clamp (myszkaGoraDol,-maxGoraDol,maxGoraDol);
 		MainCamera.transform.localRotation = Quaternion.Euler (myszkaGoraDol,0,0);
 	}
