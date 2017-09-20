@@ -24,12 +24,14 @@ public class akScript : MonoBehaviour {
 	public enemyScript wrog;
 	public float amountOdrzut;
 	public float coIle;
+	public Animator animAk;
 	void Start () {
 		me = GetComponent<Transform> ();
 		magazynek = 3 * maxAmunicja;
 		amunicja = maxAmunicja;
 		wrog = FindObjectOfType<enemyScript> ();
 		graczC = FindObjectOfType<playerController> ();
+		animAk = GetComponent<Animator> ();
 	}
 	
 	// Update is called once per frame
@@ -52,7 +54,7 @@ public class akScript : MonoBehaviour {
 		var shotUp = Input.GetMouseButtonUp (0);
 		var shot = Input.GetMouseButton (0);
 		var sprint = Input.GetKey (KeyCode.LeftShift);
-		var przeladowanie = Input.GetKeyUp (KeyCode.R);
+		var przeladowanie = Input.GetKeyDown (KeyCode.R);
 		if (machanie>maxMachanie) {
 			machanieBool = false;
 		}
@@ -75,7 +77,7 @@ public class akScript : MonoBehaviour {
 		}
 		else if ((up||left||right)&&sprint) {
 			maxMachanie = 0.07f;
-			machanieAmount = 0.012f;
+			machanieAmount = 0.007f;
 			amountOdrzut = 2f;
 		}
 		else if (down) {
@@ -95,7 +97,7 @@ public class akScript : MonoBehaviour {
 
 			Shoot ();
 		}
-		if (przeladowanie) {
+		if (przeladowanie&&amunicja!=maxAmunicja&&magazynek!=0) {
 			Reload (amunicja,magazynek);
 		}
 		if ((!shotUp&&!shot)|| (amunicja<=0)) {
@@ -133,11 +135,20 @@ public class akScript : MonoBehaviour {
 					wrog.hp = 100f;
 				}
 			}
+			if (hit.transform.gameObject.tag=="legsBox") {
+				if (wrog.hp>10) {
+					wrog.DamageTaken (10);
+				}
+				else if (wrog.hp<=10) {
+					Destroy (hit.transform.parent.gameObject);
+					wrog.hp = 100f;
+				}
+			}
 		}
 	}
 	void Reload(int _ammo,int _magazynek){
 		var dodatkoweAmmo = maxAmunicja - _ammo;
-
+		animAk.SetTrigger ("reload");
 		if (dodatkoweAmmo<=_magazynek) {
 			amunicja += dodatkoweAmmo;
 			magazynek -= dodatkoweAmmo;
