@@ -10,17 +10,27 @@ public class enemyScript : MonoBehaviour {
 	Transform me;
 	public float dystans;
 	public GameObject player;
+	public Animator animator;
 	void Start () {
+		animator = GetComponent<Animator> ();
 		me = GetComponent<Transform> ();
 		player = GameObject.FindGameObjectWithTag ("Player");
+		animator.SetTrigger ("go");
 	}
 
 	// Update is called once per frame
 	void Update () {
+		
 		dystans = Vector3.Distance (me.position,player.transform.position);
 		me.LookAt (new Vector3(player.transform.position.x,me.position.y,player.transform.position.z));
-		if (dystans>=2) {
+		if (dystans>3) {
+			animator.SetTrigger ("gonew");
+		}
+		if (dystans>2) {
 			me.Translate (Vector3.forward*speed*Time.deltaTime);
+
+		} else if(dystans<=2.5f){
+			animator.SetTrigger ("attack");	
 		}
 	}
 	public void DamageTaken(float _hp)

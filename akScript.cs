@@ -25,6 +25,9 @@ public class akScript : MonoBehaviour {
 	public float amountOdrzut;
 	public float coIle;
 	public Animator animAk;
+	public bool animacjaIsPlaying;
+	public float timer;
+
 	void Start () {
 		me = GetComponent<Transform> ();
 		magazynek = 3 * maxAmunicja;
@@ -36,6 +39,15 @@ public class akScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (timer>0) {
+			timer -= Time.deltaTime*10;
+			animacjaIsPlaying = true;
+		}
+		if (timer<=0) {
+			animacjaIsPlaying = false;
+			timer = 0;
+		}
+
 		if (coIle>0) {
 			coIle -= 1f;
 		}
@@ -54,7 +66,8 @@ public class akScript : MonoBehaviour {
 		var shotUp = Input.GetMouseButtonUp (0);
 		var shot = Input.GetMouseButton (0);
 		var sprint = Input.GetKey (KeyCode.LeftShift);
-		var przeladowanie = Input.GetKeyDown (KeyCode.R);
+		var przeladowanieUp = Input.GetKeyUp (KeyCode.R);
+		var przeladowanieDown = Input.GetKeyDown (KeyCode.R);
 		if (machanie>maxMachanie) {
 			machanieBool = false;
 		}
@@ -89,15 +102,18 @@ public class akScript : MonoBehaviour {
 			maxMachanie = 0f;
 			amountOdrzut = 0.7f;
 		}
-		if (shotUp&&amunicja>0&&coIle==0) {
+		if (shotUp&&amunicja>0&&coIle==0&&!animacjaIsPlaying) {
 			
 			Shoot ();
 		}
-		if (shot&&amunicja>0&&coIle==0) {
+		if (shot&&amunicja>0&&coIle==0&&!animacjaIsPlaying) {
 
 			Shoot ();
 		}
-		if (przeladowanie&&amunicja!=maxAmunicja&&magazynek!=0) {
+		if (przeladowanieDown&&amunicja!=maxAmunicja&&magazynek!=0) {
+			animAk.SetTrigger ("reload");
+		}
+		if (przeladowanieUp&&amunicja!=maxAmunicja&&magazynek!=0) {
 			Reload (amunicja,magazynek);
 		}
 		if ((!shotUp&&!shot)|| (amunicja<=0)) {
@@ -148,7 +164,7 @@ public class akScript : MonoBehaviour {
 	}
 	void Reload(int _ammo,int _magazynek){
 		var dodatkoweAmmo = maxAmunicja - _ammo;
-		animAk.SetTrigger ("reload");
+		timer = 12f;
 		if (dodatkoweAmmo<=_magazynek) {
 			amunicja += dodatkoweAmmo;
 			magazynek -= dodatkoweAmmo;
