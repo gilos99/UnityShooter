@@ -133,7 +133,7 @@ public class akScript : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast(mCamera.transform.position,mCamera.transform.forward,out hit)) {
 			Debug.Log (hit.transform.gameObject.tag);
-			GameObject hitObj = hit.transform.parent.gameObject;
+			GameObject hitObj = hit.transform.parent.parent.gameObject;
 			Animator hitAnim = hitObj.GetComponent<Animator> ();
 			enemyScript enemy = hitObj.GetComponent<enemyScript> ();
 			if (hit.transform.gameObject.tag=="HeadHitBox") {
@@ -146,11 +146,12 @@ public class akScript : MonoBehaviour {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
 					}
-
+					enemy.DamageTaken (60);
 					enemy.speed = 0;
 					enemy.pacz = false;
-					Destroy (hit.transform.parent.gameObject,2f);
-				
+					Destroy (hit.transform.parent.parent.gameObject,2f);
+					Destroy (hit.transform.parent.gameObject);
+					hitAnim.SetBool ("attack2",false);
 				}
 			}
 			if (hit.transform.gameObject.tag=="BodyHitBox") {
@@ -162,10 +163,12 @@ public class akScript : MonoBehaviour {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
 					}
+					enemy.DamageTaken (20);
 					enemy.speed = 0;
 					enemy.pacz = false;
-					Destroy (hit.transform.parent.gameObject,2f);
-
+					Destroy (hit.transform.parent.parent.gameObject,2f);
+					Destroy (hit.transform.parent.gameObject);
+					hitAnim.SetBool ("attack2",false);
 				}
 			}
 			if (hit.transform.gameObject.tag=="legsBox") {
@@ -176,10 +179,13 @@ public class akScript : MonoBehaviour {
 					if (!enemy.deadAnim) {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
-					};
-					enemy.speed = 0;
-					Destroy (hit.transform.parent.gameObject,2f);
+					}
 
+					enemy.DamageTaken (10);
+					enemy.speed = 0;
+					Destroy (hit.transform.parent.parent.gameObject,2f);
+					Destroy (hit.transform.parent.gameObject);
+					hitAnim.SetBool ("attack2",false);
 				}
 			}
 		}

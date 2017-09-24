@@ -22,7 +22,7 @@ public class enemyScript : MonoBehaviour {
 
 	}
 
-	// Update is called once per frame
+
 	void Update () {
 		
 		dystans = Vector3.Distance (me.position,player.transform.position);
@@ -30,20 +30,23 @@ public class enemyScript : MonoBehaviour {
 			me.LookAt (new Vector3(player.transform.position.x,me.position.y,player.transform.position.z));
 		}
 
-		if (dystans>3) {
-			animator.SetTrigger ("gonew");
-		}
-		if (dystans>2) {
-			me.Translate (Vector3.forward*speed*Time.deltaTime);
+		if (dystans>3&&hp>0) {
+				animator.SetTrigger ("gonew");
+			}
+		if (dystans>2&&hp>0) {
+				me.Translate (Vector3.forward*speed*Time.deltaTime);
 
-		} else if(dystans<=2.5f){
-			animator.SetTrigger ("attack");	
-		}
+			} else if(dystans<=2.5f ){
+				animator.SetTrigger ("attack");	
+			}
+
+
 	}
 	public void DamageTaken(float _hp)
 	{
 		hp -= _hp;
 	}
+
 
 
 }
