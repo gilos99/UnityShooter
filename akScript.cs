@@ -133,12 +133,23 @@ public class akScript : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast(mCamera.transform.position,mCamera.transform.forward,out hit)) {
 			Debug.Log (hit.transform.gameObject.tag);
+			GameObject hitObj = hit.transform.parent.gameObject;
+			Animator hitAnim = hitObj.GetComponent<Animator> ();
+			enemyScript enemy = hitObj.GetComponent<enemyScript> ();
 			if (hit.transform.gameObject.tag=="HeadHitBox") {
+				
 				if (wrog.hp>60) {
 					wrog.DamageTaken (60);
 				}
 				else if (wrog.hp<=60) {
-					Destroy (hit.transform.parent.gameObject);
+					if (!enemy.deadAnim) {
+						hitAnim.SetTrigger ("dead");
+						enemy.deadAnim = true;
+					}
+
+					enemy.speed = 0;
+					enemy.pacz = false;
+					Destroy (hit.transform.parent.gameObject,2f);
 					wrog.hp = 100f;
 				}
 			}
@@ -147,7 +158,13 @@ public class akScript : MonoBehaviour {
 					wrog.DamageTaken (20);
 				}
 				else if (wrog.hp<=20) {
-					Destroy (hit.transform.parent.gameObject);
+					if (!enemy.deadAnim) {
+						hitAnim.SetTrigger ("dead");
+						enemy.deadAnim = true;
+					}
+					enemy.speed = 0;
+					enemy.pacz = false;
+					Destroy (hit.transform.parent.gameObject,2f);
 					wrog.hp = 100f;
 				}
 			}
@@ -156,7 +173,12 @@ public class akScript : MonoBehaviour {
 					wrog.DamageTaken (10);
 				}
 				else if (wrog.hp<=10) {
-					Destroy (hit.transform.parent.gameObject);
+					if (!enemy.deadAnim) {
+						hitAnim.SetTrigger ("dead");
+						enemy.deadAnim = true;
+					};
+					enemy.speed = 0;
+					Destroy (hit.transform.parent.gameObject,2f);
 					wrog.hp = 100f;
 				}
 			}

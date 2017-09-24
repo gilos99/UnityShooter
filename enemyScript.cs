@@ -7,22 +7,29 @@ public class enemyScript : MonoBehaviour {
 	// Use this for initialization
 	public float speed;
 	public float hp=100f;
-	Transform me;
+	public Transform me;
 	public float dystans;
 	public GameObject player;
 	public Animator animator;
+	public bool pacz=true;
+	public bool deadAnim = false;
+
 	void Start () {
 		animator = GetComponent<Animator> ();
 		me = GetComponent<Transform> ();
 		player = GameObject.FindGameObjectWithTag ("Player");
 		animator.SetTrigger ("go");
+
 	}
 
 	// Update is called once per frame
 	void Update () {
 		
 		dystans = Vector3.Distance (me.position,player.transform.position);
-		me.LookAt (new Vector3(player.transform.position.x,me.position.y,player.transform.position.z));
+		if (pacz) {
+			me.LookAt (new Vector3(player.transform.position.x,me.position.y,player.transform.position.z));
+		}
+
 		if (dystans>3) {
 			animator.SetTrigger ("gonew");
 		}
@@ -37,5 +44,6 @@ public class enemyScript : MonoBehaviour {
 	{
 		hp -= _hp;
 	}
+
 
 }
