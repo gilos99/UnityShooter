@@ -138,10 +138,10 @@ public class akScript : MonoBehaviour {
 			enemyScript enemy = hitObj.GetComponent<enemyScript> ();
 			if (hit.transform.gameObject.tag=="HeadHitBox") {
 				
-				if (wrog.hp>60) {
-					wrog.DamageTaken (60);
+				if (enemy.hp>60) {
+					enemy.DamageTaken (60);
 				}
-				else if (wrog.hp<=60) {
+				else if (enemy.hp<=60) {
 					if (!enemy.deadAnim) {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
@@ -150,14 +150,14 @@ public class akScript : MonoBehaviour {
 					enemy.speed = 0;
 					enemy.pacz = false;
 					Destroy (hit.transform.parent.gameObject,2f);
-					wrog.hp = 100f;
+				
 				}
 			}
 			if (hit.transform.gameObject.tag=="BodyHitBox") {
-				if (wrog.hp>20) {
-					wrog.DamageTaken (20);
+				if (enemy.hp>20) {
+					enemy.DamageTaken (20);
 				}
-				else if (wrog.hp<=20) {
+				else if (enemy.hp<=20) {
 					if (!enemy.deadAnim) {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
@@ -165,21 +165,21 @@ public class akScript : MonoBehaviour {
 					enemy.speed = 0;
 					enemy.pacz = false;
 					Destroy (hit.transform.parent.gameObject,2f);
-					wrog.hp = 100f;
+
 				}
 			}
 			if (hit.transform.gameObject.tag=="legsBox") {
-				if (wrog.hp>10) {
-					wrog.DamageTaken (10);
+				if (enemy.hp>10) {
+					enemy.DamageTaken (10);
 				}
-				else if (wrog.hp<=10) {
+				else if (enemy.hp<=10) {
 					if (!enemy.deadAnim) {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
 					};
 					enemy.speed = 0;
 					Destroy (hit.transform.parent.gameObject,2f);
-					wrog.hp = 100f;
+
 				}
 			}
 		}
