@@ -132,10 +132,14 @@ public class akScript : MonoBehaviour {
 		coIle = 7f;
 		RaycastHit hit;
 		if (Physics.Raycast(mCamera.transform.position,mCamera.transform.forward,out hit)) {
-			Debug.Log (hit.transform.gameObject.tag);
+			
 			GameObject hitObj = hit.transform.parent.parent.gameObject;
 			Animator hitAnim = hitObj.GetComponent<Animator> ();
 			enemyScript enemy = hitObj.GetComponent<enemyScript> ();
+			CharacterController zombieC = hitObj.GetComponent<CharacterController> ();
+			if (hit.rigidbody!=null) {
+				
+			}
 			if (hit.transform.gameObject.tag=="HeadHitBox") {
 				
 				if (enemy.hp>60) {
@@ -146,11 +150,13 @@ public class akScript : MonoBehaviour {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
 					}
+					zombieC.enabled = false;
+					Destroy (hit.transform.parent.gameObject);
 					enemy.DamageTaken (60);
 					enemy.speed = 0;
 					enemy.pacz = false;
 					Destroy (hit.transform.parent.parent.gameObject,2f);
-					Destroy (hit.transform.parent.gameObject);
+
 					hitAnim.SetBool ("attack2",false);
 				}
 			}
@@ -163,11 +169,13 @@ public class akScript : MonoBehaviour {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
 					}
+					zombieC.enabled = false;
+										Destroy (hit.transform.parent.gameObject);	
 					enemy.DamageTaken (20);
 					enemy.speed = 0;
 					enemy.pacz = false;
 					Destroy (hit.transform.parent.parent.gameObject,2f);
-					Destroy (hit.transform.parent.gameObject);
+
 					hitAnim.SetBool ("attack2",false);
 				}
 			}
@@ -180,11 +188,12 @@ public class akScript : MonoBehaviour {
 						hitAnim.SetTrigger ("dead");
 						enemy.deadAnim = true;
 					}
-
+					zombieC.enabled = false;
+					Destroy (hit.transform.parent.gameObject);
 					enemy.DamageTaken (10);
 					enemy.speed = 0;
 					Destroy (hit.transform.parent.parent.gameObject,2f);
-					Destroy (hit.transform.parent.gameObject);
+
 					hitAnim.SetBool ("attack2",false);
 				}
 			}
