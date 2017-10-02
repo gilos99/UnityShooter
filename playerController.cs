@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerController : MonoBehaviour {
 	public Camera MainCamera;
@@ -18,8 +19,8 @@ public class playerController : MonoBehaviour {
 	 float przodTyl;
 	 float lewoPrawo;
 	public float predkoscBiegania = 7f;
-	
-	
+	private int hp=100;
+	public Text hpText;
 	// Use this for initialization
 	void Start () {
 		playerCC = GetComponent<CharacterController> ();
@@ -28,6 +29,7 @@ public class playerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		hpText.text = hp.ToString ();
 		if (odrzutY>0) {
 			odrzutY -= 0.1f;
 		}
@@ -82,5 +84,10 @@ public class playerController : MonoBehaviour {
 		myszkaGoraDol -= Input.GetAxis ("Mouse Y")*czuloscMyszki+odrzutY;
 		myszkaGoraDol = Mathf.Clamp (myszkaGoraDol,-maxGoraDol,maxGoraDol);
 		MainCamera.transform.localRotation = Quaternion.Euler (myszkaGoraDol,0,0);
+	}
+	public void HpTaken(int _hp)
+	{
+		hp -= _hp;
+
 	}
 }
